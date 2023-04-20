@@ -1,0 +1,11 @@
+python -m main \
+  --eval-individual-models \
+  --greedy-soup \
+  --greedy-soup-key id_val_top1 \
+  --soup-size 9 \
+  --eval-type lineval \
+  --model-name clip_vitb16 \
+  --num-classes 1000 \
+  --dataset imagenet \
+  --batch-size 256 \
+  --model-location /srv/share4/ksarangmath3/lsr/model-soups/soups/LP_clip_vitb16_IN_1imgs_class_9_models

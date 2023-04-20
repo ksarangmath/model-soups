@@ -1,0 +1,11 @@
+root_path: /srv/share/datasets/
+image_folder: ImageNet/
+nb_classes: 1000
+workers: 4
+pretrained_path: /srv/share4/asingh866/robust-ssl/pretrained/clip/clip_vitb16_inet_lineval_2imgs_class.pth.tar
+subset_file: /srv/share4/ksarangmath3/lsr/robust-ssl/subsets/imagenet_subsets1/2imgs_class.txt
+model_location: /srv/share4/ksarangmath3/lsr/model-soups/soups/LP_clip_vitb16_IN_2imgs_class_9_models/
+name: LP_clip_vitb16_IN_2imgs_class_9_models
+model_name: clip_vitb16
+eval_type: lineval
+  

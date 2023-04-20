@@ -1,0 +1,11 @@
+root_path: /srv/share4/datasets/wilds/data/
+image_folder: iwildcam_v2.0/
+nb_classes: 182
+input_size: 448
+workers: 4
+pretrained_path: /srv/share4/asingh866/robust-ssl/pretrained/clip/clip_vitb16_iwc_lp_10percent_ep_120.pth.tar
+subset_file: /srv/share4/ksarangmath3/lsr/robust-ssl/subsets/iwildcam_subsets1/10percent.txt
+model_location: /srv/share4/ksarangmath3/lsr/model-soups/soups/LP_clip_vitb16_iwildcam_10percent_9_models/
+name: LP_clip_vitb16_iwildcam_10percent_9_models
+model_name: clip_vitb16
+eval_type: lineval

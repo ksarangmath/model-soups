@@ -1,0 +1,11 @@
+root_path: /srv/share4/datasets/wilds/data/
+image_folder: camelyon17_v1.0/
+nb_classes: 2
+input_size: 96
+workers: 4
+pretrained_path: /srv/share4/asingh866/robust-ssl/pretrained/dino/dino_vitb16_cmlyn_lp_full.pth.tar
+subset_file: null
+model_location: /srv/share4/ksarangmath3/lsr/model-soups/soups/LP_dino_vitb16_camelyon_full_9_models/
+name: LP_dino_vitb16_camelyon_full_9_models
+model_name: deit_base
+eval_type: lineval
