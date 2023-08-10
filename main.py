@@ -221,8 +221,7 @@ def init_pt_model(
     load_pretrained(
         r_path=r_enc_path,
         encoder=encoder,
-        linear_classifier=linear_classifier,
-        model_name=model_name)
+        linear_classifier=linear_classifier)
 
     return encoder, linear_classifier
 
@@ -294,19 +293,16 @@ if __name__ == '__main__':
             print(model_path)
             assert os.path.exists(model_path)
 
-            encoder, linear_classifier, _, _ = init_pt_model(
+            encoder, linear_classifier = init_pt_model(
                 device="cuda:0",
                 num_classes=args.num_classes,
                 normalize=args.normalize,
-                training=False,        
                 r_enc_path=model_path,
-                world_size=1,
                 model_name=args.model_name,
                 finetuning=False,
-                eval_type=args.eval_type,
-                ref_lr=0,
-                num_epochs=1,
-                its_per_epoch=100)
+                eval_type=args.eval_type,)
+            encoder.cuda()
+            linear_classifier.cuda()
 
             results = {'model_name' : f'{EXP_NAME}_{j}.pth.tar'}
 

@@ -260,7 +260,7 @@ def main(submitit_args=None):
             model_name=args.model_name
         )
 
-    model, linear_classifier, _, _ = init_model(
+    model, linear_classifier = init_model(
         eval_type=args.eval_type,
         model_name=args.model_name,
         device=DEVICE,
@@ -278,8 +278,6 @@ def main(submitit_args=None):
         weight_decay=0,
         nesterov=True,
         dampening=0.0,
-        start_lr=None,
-        final_lr=None,
     )
 
     devices = [x for x in range(torch.cuda.device_count())]

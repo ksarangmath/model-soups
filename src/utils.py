@@ -5,7 +5,6 @@
 # LICENSE file in the root directory of this source tree.
 #
 
-import os
 import math
 import torch
 
@@ -15,9 +14,7 @@ import src.resnet50 as resnet
 
 from torch.optim import SGD, Adam
 
-import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
-import torch.nn as nn
 
 
 def _no_grad_trunc_normal_(tensor, mean, std, a, b):
@@ -146,22 +143,6 @@ def init_model(
     if finetuning:
         param_groups.append({'params': (p for n, p in encoder.named_parameters()
                     if p.requires_grad and ('fc' not in n))})
-
-    # -- different optimizers and schedulers depending on dataset
-    optimizer, scheduler = None, None
-    if 'imagenet' in image_folder:
-        optimizer = SGD(param_groups, lr=ref_lr, weight_decay=weight_decay, \
-            momentum=0.9, dampening=dampening, nesterov=nesterov)
-        scheduler = WarmupCosineSchedule(optimizer, warmup_epochs*its_per_epoch, \
-            start_lr=ref_lr, ref_lr=ref_lr, T_max=num_epochs*its_per_epoch)
-    elif 'iwildcam' in image_folder:
-        optimizer = Adam(param_groups, weight_decay=weight_decay, lr=ref_lr)
-    elif 'camelyon' in image_folder:
-        optimizer = SGD(param_groups, lr=ref_lr, weight_decay=weight_decay, \
-            momentum=0.9, dampening=dampening, nesterov=nesterov)
-    else:
-        raise Exception(f"Dataset in folder {image_folder} is not supported.")
-        exit(0)
  
     # -- DDP encapsulation for multi-gpu training and evaluation
     if world_size > 1:
@@ -169,7 +150,7 @@ def init_model(
         if finetuning:
             encoder = DistributedDataParallel(encoder)
 
-    return encoder, linear_classifier, optimizer, scheduler
+    return encoder, linear_classifier
 
 
 def load_pretrained(
@@ -179,8 +160,8 @@ def load_pretrained(
     model_name='deit_base'
 ):
     checkpoint = torch.load(r_path, map_location='cpu')
-    logger.info(f'model name: {model_name}')
-    logger.info(f'checkpoint path: {r_path}')
+    print(f'model name: {model_name}')
+    print(f'checkpoint path: {r_path}')
     enc_checkpoint = checkpoint['target_encoder'] if 'target_encoder' in checkpoint else \
         checkpoint['state_dict'] if 'state_dict' in checkpoint else \
         checkpoint['model'] if 'model' in checkpoint else \
@@ -189,12 +170,12 @@ def load_pretrained(
 
     for k, v in encoder.state_dict().items():
         if k not in pretrained_dict:
-            logger.info(f'key "{k}" could not be found in loaded state dict')
+            print(f'key "{k}" could not be found in loaded state dict')
         elif pretrained_dict[k].shape != v.shape:
-            logger.info(f'key "{k}" is of different shape in encoder and loaded state dict')
+            print(f'key "{k}" is of different shape in encoder and loaded state dict')
             pretrained_dict[k] = v
     msg = encoder.load_state_dict(pretrained_dict, strict=False)
-    logger.info(f'loaded pretrained encoder with msg: {msg}')
+    print(f'loaded pretrained encoder with msg: {msg}')
 
     if linear_classifier is not None:
         lin_checkpoint = checkpoint['linear_classifier'] if 'linear_classifier' in checkpoint else \
@@ -212,9 +193,9 @@ def load_pretrained(
             pass
         try:
             msg = linear_classifier.load_state_dict(pretrained_dict, strict=True)
-            logger.info(f'loaded pretrained linear classifier with msg: {msg}')
+            print(f'loaded pretrained linear classifier with msg: {msg}')
         except Exception:
-            logger.info(f'failed to load checkpoint, using random init for linear classifier')
+            print(f'failed to load checkpoint, using random init for linear classifier')
             pass
 
     del checkpoint

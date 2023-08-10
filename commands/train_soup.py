@@ -196,12 +196,6 @@ def launch():
 
     hparam_info = json.load(open('/srv/share4/ksarangmath3/lsr/model-soups/hparam_info.json'))
 
-    # for i in range(1, len(hparam_info)):
-    #     for key in hparam_info[f"model_{i}"]:
-    #         params[key] = hparam_info[f"model_{i}"][key]
-
-    # hparam_info = {"model_0": {}, "model_1": {"aug": "rand-m9-n0.5", "wd": 0.65, "lr": 6.229787713239867e-06, "mix": 0.8, "smoothing": 0.1, "epochs": 20}}
-
     hparam_info["model_0"] = {"epochs": 0}
     ft_param_list = []
     for i in range(0, args.soup_size):
